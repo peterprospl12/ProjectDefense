@@ -10,6 +10,7 @@ using ProjectDefense.Infrastructure.Identity;
 using ProjectDefense.Infrastructure.Persistence;
 using ProjectDefense.Infrastructure.Persistence.Repositories;
 using ProjectDefense.Infrastructure.Services;
+using ProjectDefense.Web.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,9 @@ builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IStudentBlockRepository, StudentBlockRepository>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -62,6 +66,8 @@ using (var scope = app.Services.CreateScope())
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
 else
 {
@@ -78,5 +84,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapSlotsEndpoints();
 
 app.Run();

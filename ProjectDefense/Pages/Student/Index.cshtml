@@ -42,22 +42,12 @@
 			<td>@slot.StartTime.ToShortTimeString() - @slot.EndTime.ToShortTimeString()</td>
 			<td>@slot.RoomName</td>
 			<td>
-				@if (slot.IsBooked)
-				{
-					<span class="badge bg-danger">Booked</span>
-				}
-				else
-				{
-					<span class="badge bg-success">Available</span>
-				}
+				<span class="badge bg-success">Available</span>
 			</td>
 			<td>
-				@if (!slot.IsBooked)
-				{
-					<form method="post" asp-page-handler="Book" asp-route-reservationId="@slot.Id" onsubmit="return confirm('Confirm booking this slot?');">
-						<button type="submit" class="btn btn-primary btn-sm" @(Model.HasActiveBooking ? "disabled" : "")>Book</button>
-					</form>
-				}
+				<form method="post" asp-page-handler="Book" asp-route-reservationId="@slot.Id" onsubmit="return confirm('Confirm booking this slot?');">
+					<button type="submit" class="btn btn-primary btn-sm" @(Model.HasActiveBooking ? "disabled" : "")>Book</button>
+				</form>
 			</td>
 		</tr>
 	}

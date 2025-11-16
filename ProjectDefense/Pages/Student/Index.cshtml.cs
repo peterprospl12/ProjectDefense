@@ -13,7 +13,7 @@ namespace ProjectDefense.Web.Pages.Student
     [Authorize(Roles = "Student")]
     public class IndexModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        public IEnumerable<ReservationDto> AvailableSlots { get; set; } = [];
+        public IEnumerable<AvailableSlotDto> AvailableSlots { get; set; } = [];
         public bool HasActiveBooking { get; set; }
         public int ActiveBookingsCount { get; set; }
 
@@ -31,15 +31,7 @@ namespace ProjectDefense.Web.Pages.Student
             ActiveBookingsCount = myReservations.Count();
 
             var slots = await mediator.Send(new GetAvailableSlotsQuery(null));
-
-            AvailableSlots = slots.Select(r => new ReservationDto
-            {
-                Id = r.Id,
-                RoomName = r.RoomName,
-                StartTime = r.StartTime,
-                EndTime = r.EndTime,
-                StudentName = r.StudentName,
-            }).OrderBy(s => s.StartTime).ToList();
+            AvailableSlots = slots.OrderBy(s => s.StartTime).ToList();
         }
 
         public async Task<IActionResult> OnPostBookAsync(int reservationId)
