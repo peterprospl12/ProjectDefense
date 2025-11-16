@@ -3,5 +3,5 @@ using ProjectDefense.Application.DTOs;
 
 namespace ProjectDefense.Application.UseCases.Queries
 {
-    public record GetAvailableSlotsQuery(DateTime? FromDate) : IRequest<IEnumerable<ReservationDto>>;
+    public record GetAvailableSlotsQuery(DateTime? FromDate) : IRequest<IEnumerable<AvailableSlotDto>>;
 }
