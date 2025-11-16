@@ -12,17 +12,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ProjectDefense.Web.Pages.Lecturer
 {
     [Authorize(Roles = "Lecturer")]
-    public class CreateAvailabilityModel : PageModel
+    public class CreateAvailabilityModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        private readonly IMediator _mediator;
-        private readonly UserManager<User> _userManager;
-
-        public CreateAvailabilityModel(IMediator mediator, UserManager<User> userManager)
-        {
-            _mediator = mediator;
-            _userManager = userManager;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -37,32 +28,32 @@ namespace ProjectDefense.Web.Pages.Lecturer
             [Required]
             [DataType(DataType.Date)]
             [Display(Name = "Start Date")]
-            public DateOnly StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+            public DateOnly StartDate { get; init; } = DateOnly.FromDateTime(DateTime.Today);
 
             [Required]
             [DataType(DataType.Date)]
             [Display(Name = "End Date")]
-            public DateOnly EndDate { get; set; } = DateOnly.FromDateTime(DateTime.Today);
+            public DateOnly EndDate { get; init; } = DateOnly.FromDateTime(DateTime.Today);
 
             [Required]
             [DataType(DataType.Time)]
             [Display(Name = "Start Time")]
-            public TimeOnly StartTime { get; set; }
+            public TimeOnly StartTime { get; init; }
 
             [Required]
             [DataType(DataType.Time)]
             [Display(Name = "End Time")]
-            public TimeOnly EndTime { get; set; }
+            public TimeOnly EndTime { get; init; }
 
             [Required]
             [Range(5, 120, ErrorMessage = "Slot duration must be between 5 and 120 minutes.")]
             [Display(Name = "Slot Duration (minutes)")]
-            public int SlotDurationInMinutes { get; set; } = 15;
+            public int SlotDurationInMinutes { get; init; } = 15;
         }
 
         public async Task OnGetAsync()
         {
-            var rooms = await _mediator.Send(new GetAllRoomsQuery());
+            var rooms = await mediator.Send(new GetAllRoomsQuery());
             Rooms = new SelectList(rooms, "Id", "Name");
         }
 
@@ -74,7 +65,7 @@ namespace ProjectDefense.Web.Pages.Lecturer
                 return Page();
             }
 
-            var lecturer = await _userManager.GetUserAsync(User);
+            var lecturer = await userManager.GetUserAsync(User);
             if (lecturer == null)
             {
                 return Forbid();
@@ -92,7 +83,7 @@ namespace ProjectDefense.Web.Pages.Lecturer
                     Input.SlotDurationInMinutes
                 );
 
-                await _mediator.Send(command);
+                await mediator.Send(command);
 
                 TempData["StatusMessage"] = "Availability has been successfully created.";
                 return RedirectToPage("/Lecturer/Index");

@@ -9,30 +9,23 @@ using System.ComponentModel.DataAnnotations;
 namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 {
     [Authorize(Roles = "Lecturer")]
-    public class EditModel : PageModel
+    public class EditModel(IMediator mediator) : PageModel
     {
-        private readonly IMediator _mediator;
-
-        public EditModel(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
         public class InputModel
         {
             [Required]
-            public int Id { get; set; }
+            public int Id { get; init; }
 
             [Required]
             [StringLength(100)]
-            public string Name { get; set; }
+            public string Name { get; init; }
 
             [Required]
             [StringLength(20)]
-            public string Number { get; set; }
+            public string Number { get; init; }
         }
 
         public async Task<IActionResult> OnGetAsync(int? id)
@@ -42,7 +35,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
                 return NotFound();
             }
 
-            var room = await _mediator.Send(new GetRoomByIdQuery { Id = id.Value });
+            var room = await mediator.Send(new GetRoomByIdQuery { Id = id.Value });
             if (room == null)
             {
                 return NotFound();
@@ -65,7 +58,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
                 return Page();
             }
 
-            await _mediator.Send(new UpdateRoomCommand(Input.Id, Input.Name, Input.Number));
+            await mediator.Send(new UpdateRoomCommand(Input.Id, Input.Name, Input.Number));
 
             TempData["StatusMessage"] = "Room has been updated successfully.";
             return RedirectToPage("./Index");

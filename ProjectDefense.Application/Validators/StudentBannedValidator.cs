@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using ProjectDefense.Application.Interfaces;
 
-namespace ProjectDefense.Application.Validators.Shared
+namespace ProjectDefense.Application.Validators
 {
     public static class StudentBannedValidator
     {

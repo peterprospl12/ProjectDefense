@@ -8,15 +8,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 {
     [Authorize(Roles = "Lecturer")]
-    public class CreateModel : PageModel
+    public class CreateModel(IMediator mediator) : PageModel
     {
-        private readonly IMediator _mediator;
-
-        public CreateModel(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -24,11 +17,11 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
         {
             [Required]
             [StringLength(100)]
-            public string Name { get; set; }
+            public string Name { get; init; }
 
             [Required]
             [StringLength(20)]
-            public string Number { get; set; }
+            public string Number { get; init; }
         }
 
         public void OnGet()
@@ -42,7 +35,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
                 return Page();
             }
 
-            await _mediator.Send(new CreateRoomCommand(Input.Name, Input.Number));
+            await mediator.Send(new CreateRoomCommand(Input.Name, Input.Number));
 
             TempData["StatusMessage"] = "Room has been created successfully.";
             return RedirectToPage("./Index");

@@ -14,19 +14,12 @@ using ProjectDefense.Domain.Enums;
 namespace ProjectDefense.Web.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
-    public class LoginModel : PageModel
+    public class LoginModel(
+        SignInManager<User> signInManager,
+        ILogger<LoginModel> logger,
+        UserManager<User> userManager)
+        : PageModel
     {
-        private readonly SignInManager<User> _signInManager;
-        private readonly ILogger<LoginModel> _logger;
-        private readonly UserManager<User> _userManager;
-
-        public LoginModel(SignInManager<User> signInManager, ILogger<LoginModel> logger, UserManager<User> userManager)
-        {
-            _signInManager = signInManager;
-            _logger = logger;
-            _userManager = userManager;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -62,7 +55,7 @@ namespace ProjectDefense.Web.Areas.Identity.Pages.Account
 
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             ReturnUrl = returnUrl;
         }
@@ -71,22 +64,22 @@ namespace ProjectDefense.Web.Areas.Identity.Pages.Account
         {
             returnUrl ??= Url.Content("~/");
 
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            ExternalLogins = (await signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
 
             if (ModelState.IsValid)
             {
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
+                var result = await signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: true);
 
                 if (result.Succeeded)
                 {
-                    _logger.LogInformation("User logged in.");
-                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    logger.LogInformation("User logged in.");
+                    var user = await userManager.FindByEmailAsync(Input.Email);
 
-                    if (await _userManager.IsInRoleAsync(user, nameof(Role.Student)))
+                    if (await userManager.IsInRoleAsync(user, nameof(Role.Student)))
                     {
                         return LocalRedirect(Url.Content("~/Student/Index"));
                     }
-                    else if (await _userManager.IsInRoleAsync(user, nameof(Role.Lecturer)))
+                    else if (await userManager.IsInRoleAsync(user, nameof(Role.Lecturer)))
                     {
                         return LocalRedirect(Url.Content("~/Lecturer/Index"));
                     }
@@ -95,7 +88,7 @@ namespace ProjectDefense.Web.Areas.Identity.Pages.Account
                 }
                 if (result.IsLockedOut)
                 {
-                    _logger.LogWarning("User account locked out.");
+                    logger.LogWarning("User account locked out.");
                     return RedirectToPage("./Lockout");
                 }
                 if (result.RequiresTwoFactor)

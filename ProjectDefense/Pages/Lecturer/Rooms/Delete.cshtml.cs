@@ -9,20 +9,10 @@ using ProjectDefense.Application.UseCases.Queries;
 namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 {
     [Authorize(Roles = "Lecturer")]
-    public class DeleteModel : PageModel
+    public class DeleteModel(IMediator mediator) : PageModel
     {
-        private readonly IMediator _mediator;
-
-        public DeleteModel(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         [BindProperty]
         public RoomDto Room { get; set; }
-
-        [TempData]
-        public string ErrorMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,7 +21,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
                 return NotFound();
             }
 
-            Room = await _mediator.Send(new GetRoomByIdQuery { Id = id.Value });
+            Room = await mediator.Send(new GetRoomByIdQuery { Id = id.Value });
 
             if (Room == null)
             {
@@ -49,7 +39,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 
             try
             {
-                await _mediator.Send(new DeleteRoomCommand(id.Value));
+                await mediator.Send(new DeleteRoomCommand(id.Value));
                 TempData["StatusMessage"] = "Room has been deleted successfully.";
                 return RedirectToPage("./Index");
             }

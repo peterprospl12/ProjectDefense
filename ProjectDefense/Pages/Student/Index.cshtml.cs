@@ -5,25 +5,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using ProjectDefense.Application.DTOs;
 using ProjectDefense.Application.UseCases.Commands;
+using ProjectDefense.Application.UseCases.Queries;
 using ProjectDefense.Domain.Entities;
-using ProjectDefense.Application.Interfaces;
 
 namespace ProjectDefense.Web.Pages.Student
 {
     [Authorize(Roles = "Student")]
-    public class IndexModel : PageModel
+    public class IndexModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        private readonly IMediator _mediator;
-        private readonly UserManager<User> _userManager;
-        private readonly IReservationRepository _reservationRepository;
-
-        public IndexModel(IMediator mediator, UserManager<User> userManager, IReservationRepository reservationRepository)
-        {
-            _mediator = mediator;
-            _userManager = userManager;
-            _reservationRepository = reservationRepository;
-        }
-
         public IEnumerable<ReservationDto> AvailableSlots { get; set; } = [];
         public bool HasActiveBooking { get; set; }
         public int ActiveBookingsCount { get; set; }
@@ -33,31 +22,36 @@ namespace ProjectDefense.Web.Pages.Student
 
         public async Task OnGetAsync()
         {
-            var student = await _userManager.GetUserAsync(User);
+            var student = await userManager.GetUserAsync(User);
             if (student == null) return;
 
-            HasActiveBooking = await _reservationRepository.HasStudentAlreadyBookedAsync(student.Id);
-            var myReservations = await _reservationRepository.GetActiveReservationsByStudentIdAsync(student.Id);
+            var myReservations = await mediator.Send(new GetUserReservationsQuery(student.Id));
+
+            HasActiveBooking = myReservations.Any();
             ActiveBookingsCount = myReservations.Count();
 
-            var slots = await _reservationRepository.GetAvailableSlotsAsync(null);
-           
+            var slots = await mediator.Send(new GetAvailableSlotsQuery(null));
+
             AvailableSlots = slots.Select(r => new ReservationDto
             {
                 Id = r.Id,
-                RoomName = r.Availability?.Room?.Name ?? "-",
+                RoomName = r.RoomName,
                 StartTime = r.StartTime,
                 EndTime = r.EndTime,
-                StudentName = r.Student?.UserName,
+                StudentName = r.StudentName,
             }).OrderBy(s => s.StartTime).ToList();
         }
 
         public async Task<IActionResult> OnPostBookAsync(int reservationId)
         {
-            var student = await _userManager.GetUserAsync(User);
+            var student = await userManager.GetUserAsync(User);
             if (student == null) return Forbid();
 
-            if (await _reservationRepository.HasStudentAlreadyBookedAsync(student.Id))
+            var myReservations = await mediator.Send(new GetUserReservationsQuery(student.Id));
+
+            var hasAlreadyBooked = myReservations.Any();
+
+            if (hasAlreadyBooked)
             {
                 StatusMessage = "You currently have an active reservation. Please cancel it before booking a new slot.";
                 return RedirectToPage();
@@ -65,7 +59,7 @@ namespace ProjectDefense.Web.Pages.Student
 
             try
             {
-                await _mediator.Send(new BookReservationCommand
+                await mediator.Send(new BookReservationCommand
                 (
                     reservationId,
                     student.Id

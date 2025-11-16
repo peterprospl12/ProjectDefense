@@ -12,17 +12,8 @@ using System.ComponentModel.DataAnnotations;
 namespace ProjectDefense.Web.Pages.Lecturer.Blocks
 {
     [Authorize(Roles = "Lecturer")]
-    public class CreateModel : PageModel
+    public class CreateModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        private readonly IMediator _mediator;
-        private readonly UserManager<User> _userManager;
-
-        public CreateModel(IMediator mediator, UserManager<User> userManager)
-        {
-            _mediator = mediator;
-            _userManager = userManager;
-        }
-
         [BindProperty]
         public InputModel Input { get; set; }
 
@@ -35,22 +26,22 @@ namespace ProjectDefense.Web.Pages.Lecturer.Blocks
         {
             [Required]
             [Display(Name = "Room")]
-            public int RoomId { get; set; }
+            public int RoomId { get; init; }
 
             [Required]
             [Display(Name = "Start (local)")]
             [DataType(DataType.DateTime)]
-            public DateTime Start { get; set; } = DateTime.Now;
+            public DateTime Start { get; init; } = DateTime.Now;
 
             [Required]
             [Display(Name = "End (local)")]
             [DataType(DataType.DateTime)]
-            public DateTime End { get; set; } = DateTime.Now.AddHours(1);
+            public DateTime End { get; init; } = DateTime.Now.AddHours(1);
         }
 
         public async Task OnGetAsync()
         {
-            var rooms = await _mediator.Send(new GetAllRoomsQuery());
+            var rooms = await mediator.Send(new GetAllRoomsQuery());
             Rooms = new SelectList(rooms, "Id", "Name");
         }
 
@@ -69,7 +60,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Blocks
                 return Page();
             }
 
-            var lecturer = await _userManager.GetUserAsync(User);
+            var lecturer = await userManager.GetUserAsync(User);
             if (lecturer == null)
             {
                 return Forbid();
@@ -84,7 +75,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Blocks
                     Input.End
                 );
 
-                await _mediator.Send(command);
+                await mediator.Send(command);
 
                 StatusMessage = "Selected period has been blocked. Existing reservations in this period were cancelled.";
                 return RedirectToPage("/Lecturer/Index");

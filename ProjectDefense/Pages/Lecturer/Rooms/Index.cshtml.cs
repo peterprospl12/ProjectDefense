@@ -8,15 +8,8 @@ using ProjectDefense.Application.UseCases.Queries;
 namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 {
     [Authorize(Roles = "Lecturer")]
-    public class IndexModel : PageModel
+    public class IndexModel(IMediator mediator) : PageModel
     {
-        private readonly IMediator _mediator;
-
-        public IndexModel(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         public IEnumerable<RoomDto> Rooms { get; set; }
 
         [TempData]
@@ -24,7 +17,7 @@ namespace ProjectDefense.Web.Pages.Lecturer.Rooms
 
         public async Task OnGetAsync()
         {
-            Rooms = await _mediator.Send(new GetAllRoomsQuery());
+            Rooms = await mediator.Send(new GetAllRoomsQuery());
         }
     }
 }

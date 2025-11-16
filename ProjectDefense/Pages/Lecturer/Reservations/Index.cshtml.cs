@@ -11,17 +11,8 @@ using ProjectDefense.Domain.Entities;
 namespace ProjectDefense.Web.Pages.Lecturer.Reservations
 {
     [Authorize(Roles = "Lecturer")]
-    public class IndexModel : PageModel
+    public class IndexModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        private readonly IMediator _mediator;
-        private readonly UserManager<User> _userManager;
-
-        public IndexModel(IMediator mediator, UserManager<User> userManager)
-        {
-            _mediator = mediator;
-            _userManager = userManager;
-        }
-
         public IEnumerable<ReservationDto> Reservations { get; set; }
 
         [TempData]
@@ -29,16 +20,16 @@ namespace ProjectDefense.Web.Pages.Lecturer.Reservations
 
         public async Task OnGetAsync()
         {
-            var lecturer = await _userManager.GetUserAsync(User);
-            Reservations = await _mediator.Send(new GetAllReservationsQuery(lecturer.Id));
+            var lecturer = await userManager.GetUserAsync(User);
+            Reservations = await mediator.Send(new GetAllReservationsQuery(lecturer.Id));
         }
 
         public async Task<IActionResult> OnPostCancelAsync(int reservationId)
         {
-            var lecturer = await _userManager.GetUserAsync(User);
+            var lecturer = await userManager.GetUserAsync(User);
             try
             {
-                await _mediator.Send(new CancelReservationCommand
+                await mediator.Send(new CancelReservationCommand
                 (
                     reservationId,
                     lecturer.Id
