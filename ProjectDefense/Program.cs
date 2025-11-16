@@ -47,6 +47,7 @@ builder.Services.AddScoped<IAvailabilityRepository, AvailabilityRepository>();
 builder.Services.AddScoped<IReservationRepository, ReservationRepository>();
 builder.Services.AddScoped<IRoomRepository, RoomRepository>();
 builder.Services.AddScoped<IStudentBlockRepository, StudentBlockRepository>();
+builder.Services.AddScoped<IExportService, ExportService>();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

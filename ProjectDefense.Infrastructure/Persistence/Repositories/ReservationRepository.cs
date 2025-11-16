@@ -33,8 +33,10 @@ namespace ProjectDefense.Infrastructure.Persistence.Repositories
         public async Task<IEnumerable<Reservation>> GetReservationsForLecturerInPeriodAsync(string lecturerId, DateTime start, DateTime end)
         {
             return await context.Reservations
+                .Include(r => r.Student) // Dołącz dane studenta
+                .Include(r => r.Availability) // Dołącz dane o dostępności
+                .ThenInclude(a => a.Room) // W ramach dostępności, dołącz dane o pokoju
                 .Where(r => r.Availability.LecturerId == lecturerId && r.StartTime >= start && r.EndTime <= end)
-                .Include(r => r.Student) 
                 .OrderBy(r => r.StartTime)
                 .ToListAsync();
         }

@@ -13,6 +13,5 @@ namespace ProjectDefense.Application.Interfaces
         Task<IEnumerable<Reservation>> GetAvailableSlotsAsync(DateTime? fromDate);
         Task UpdateAsync(Reservation reservation);
         Task UpdateRangeAsync(IEnumerable<Reservation> reservations);
-
     }
 }
