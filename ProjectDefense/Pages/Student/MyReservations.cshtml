@@ -1,0 +1,85 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Student.MyReservationsModel
+@{
+    ViewData["Title"] = "My Reservations";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<h3>Your active reservation(s)</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Room</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model.MyReservations)
+        {
+            <tr>
+                <td>@r.StartTime.ToShortDateString()</td>
+                <td>@r.StartTime.ToShortTimeString() - @r.EndTime.ToShortTimeString()</td>
+                <td>@r.RoomName</td>
+                <td>
+                    <form method="post" asp-page-handler="Cancel" asp-route-reservationId="@r.Id" onsubmit="return confirm('Are you sure you want to cancel?');">
+                        <button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+        }
+        @if (!Model.MyReservations.Any())
+        {
+            <tr><td colspan="4"><em>No active reservations.</em></td></tr>
+        }
+    </tbody>
+</table>
+
+<h3 class="mt-4">Change reservation</h3>
+<p>Select a new free slot to replace your current one.</p>
+
+@if (Model.MyReservations.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Current</th>
+                <th>New slot</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var my in Model.MyReservations)
+            {
+                <tr>
+                    <td>
+                        @my.StartTime.ToString("g") <br /> @my.RoomName
+                    </td>
+                    <td>
+                        <form method="post" asp-page-handler="Change" class="d-flex">
+                            <input type="hidden" name="currentReservationId" value="@my.Id" />
+                            <select name="newReservationId" class="form-select me-2" required>
+                                <option value="">-- select new slot --</option>
+                                @foreach (var slot in Model.AvailableSlots)
+                                {
+                                    <option value="@slot.Id">@slot.StartTime.ToString("g") — @slot.RoomName</option>
+                                }
+                            </select>
+                            <button type="submit" class="btn btn-primary btn-sm">Change</button>
+                        </form>
+                    </td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p><em>No reservation to change.</em></p>
+}

@@ -1,0 +1,65 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Student.IndexModel
+@{
+	ViewData["Title"] = "Available Slots";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="row">
+	<div class="col-md-4">
+		<div class="card mb-3">
+			<div class="card-header">
+				Manage Your Reservations
+			</div>
+			<div class="card-body">
+				<p class="card-text">View, cancel, or change your active reservations. You have @Model.ActiveBookingsCount active reservation(s).</p>
+				<a asp-page="/Student/MyReservations" class="btn btn-primary">My Reservations</a>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<h3 class="mt-4">Book a new consultation</h3>
+<table class="table">
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Time</th>
+		<th>Room</th>
+		<th>Status</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var slot in Model.AvailableSlots)
+	{
+		<tr>
+			<td>@slot.StartTime.ToShortDateString()</td>
+			<td>@slot.StartTime.ToShortTimeString() - @slot.EndTime.ToShortTimeString()</td>
+			<td>@slot.RoomName</td>
+			<td>
+				@if (slot.IsBooked)
+				{
+					<span class="badge bg-danger">Booked</span>
+				}
+				else
+				{
+					<span class="badge bg-success">Available</span>
+				}
+			</td>
+			<td>
+				@if (!slot.IsBooked)
+				{
+					<form method="post" asp-page-handler="Book" asp-route-reservationId="@slot.Id" onsubmit="return confirm('Confirm booking this slot?');">
+						<button type="submit" class="btn btn-primary btn-sm" @(Model.HasActiveBooking ? "disabled" : "")>Book</button>
+					</form>
+				}
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

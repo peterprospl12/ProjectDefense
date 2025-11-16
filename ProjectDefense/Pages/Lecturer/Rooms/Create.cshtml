@@ -1,0 +1,32 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.Rooms.CreateModel
+@{
+	ViewData["Title"] = "Create Room";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+	<div class="col-md-4">
+		<form method="post">
+			<h4>Create a new room.</h4>
+			<hr />
+			<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+			<div class="form-floating mb-3">
+				<input asp-for="Input.Name" class="form-control" />
+				<label asp-for="Input.Name" class="form-label"></label>
+				<span asp-validation-for="Input.Name" class="text-danger"></span>
+			</div>
+			<div class="form-floating mb-3">
+				<input asp-for="Input.Number" class="form-control" />
+				<label asp-for="Input.Number" class="form-label">Room Number</label>
+				<span asp-validation-for="Input.Number" class="text-danger"></span>
+			</div>
+			<button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

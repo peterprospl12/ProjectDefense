@@ -1,0 +1,61 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.CreateAvailabilityModel
+@{
+    ViewData["Title"] = "Define Availability";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form method="post">
+            <h4>Create new availability slots.</h4>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.RoomId" class="form-label"></label>
+                <select asp-for="Input.RoomId" asp-items="Model.Rooms" class="form-control">
+                    <option value="">-- Select a Room --</option>
+                </select>
+                <span asp-validation-for="Input.RoomId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.StartDate" class="form-label"></label>
+                <input asp-for="Input.StartDate" class="form-control" />
+                <span asp-validation-for="Input.StartDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.EndDate" class="form-label"></label>
+                <input asp-for="Input.EndDate" class="form-control" />
+                <span asp-validation-for="Input.EndDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.StartTime" class="form-label"></label>
+                <input asp-for="Input.StartTime" class="form-control" />
+                <span asp-validation-for="Input.StartTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.EndTime" class="form-label"></label>
+                <input asp-for="Input.EndTime" class="form-control" />
+                <span asp-validation-for="Input.EndTime" class="text-danger"></span>
+            </div>
+
+            <div class="form-group mb-3">
+                <label asp-for="Input.SlotDurationInMinutes" class="form-label"></label>
+                <input asp-for="Input.SlotDurationInMinutes" class="form-control" />
+                <span asp-validation-for="Input.SlotDurationInMinutes" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="w-100 btn btn-lg btn-primary">Create Availability</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

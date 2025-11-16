@@ -1,0 +1,55 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.Reservations.IndexModel
+@{
+	ViewData["Title"] = "Manage Reservations";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<table class="table">
+	<thead>
+	<tr>
+		<th>Date</th>
+		<th>Time</th>
+		<th>Room</th>
+		<th>Student</th>
+		<th>Status</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var reservation in Model.Reservations)
+	{
+		<tr>
+			<td>@reservation.StartTime.ToShortDateString()</td>
+			<td>@reservation.StartTime.ToShortTimeString() - @reservation.EndTime.ToShortTimeString()</td>
+			<td>@Html.DisplayFor(modelItem => reservation.RoomName)</td>
+			<td>@Html.DisplayFor(modelItem => reservation.StudentName)</td>
+			<td>
+				@if (reservation.IsBlocked)
+				{ 
+					<span class="badge bg-danger">Not available</span>
+				}
+				else if (reservation.IsBooked)
+				{
+					<span class="badge bg-danger">Booked</span>
+				}
+				else
+				{
+					<span class="badge bg-success">Available</span>
+				}
+			</td>
+			<td>
+				@if (reservation.IsBooked)
+				{
+					<form method="post" asp-page-handler="Cancel" asp-route-reservationId="@reservation.Id" onsubmit="return confirm('Are you sure you want to cancel this reservation?');">
+						<button type="submit" class="btn btn-warning btn-sm">Cancel</button>
+					</form>
+				}
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

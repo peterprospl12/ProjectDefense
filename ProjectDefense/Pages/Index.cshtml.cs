@@ -1,20 +1,28 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using ProjectDefense.Domain.Entities;
 
-namespace ProjectDefense.Pages
+namespace ProjectDefense.Web.Pages
 {
-    public class IndexModel : PageModel
+    public class IndexModel(SignInManager<User> signInManager) : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
-
-        public IndexModel(ILogger<IndexModel> logger)
+        public IActionResult OnGet()
         {
-            _logger = logger;
-        }
+            if (signInManager.IsSignedIn(User))
+            {
+                if (User.IsInRole("Lecturer"))
+                {
+                    return RedirectToPage("/Lecturer/Index");
+                }
 
-        public void OnGet()
-        {
+                if (User.IsInRole("Student"))
+                {
+                    return RedirectToPage("/Student/Index");
+                }
+            }
 
+            return RedirectToPage("/Account/Login", new { area = "Identity" });
         }
     }
 }

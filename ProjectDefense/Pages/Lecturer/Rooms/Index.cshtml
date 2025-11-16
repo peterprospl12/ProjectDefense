@@ -1,0 +1,36 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.Rooms.IndexModel
+@{
+	ViewData["Title"] = "Manage Rooms";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<p>
+	<a asp-page="Create" class="btn btn-primary">Create New Room</a>
+</p>
+
+<table class="table">
+	<thead>
+	<tr>
+		<th>Name</th>
+		<th>Number</th>
+		<th></th>
+	</tr>
+	</thead>
+	<tbody>
+	@foreach (var room in Model.Rooms)
+	{
+		<tr>
+			<td>@Html.DisplayFor(modelItem => room.Name)</td>
+			<td>@Html.DisplayFor(modelItem => room.Number)</td>
+			<td>
+				<a asp-page="./Edit" asp-route-id="@room.Id" class="btn btn-secondary btn-sm">Edit</a>
+				<a asp-page="./Delete" asp-route-id="@room.Id" class="btn btn-danger btn-sm">Delete</a>
+			</td>
+		</tr>
+	}
+	</tbody>
+</table>

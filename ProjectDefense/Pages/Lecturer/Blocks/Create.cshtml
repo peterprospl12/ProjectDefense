@@ -1,0 +1,44 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.Blocks.CreateModel
+@{
+	ViewData["Title"] = "Block Period";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="row">
+	<div class="col-md-6">
+		<form method="post">
+			<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+			<div class="mb-3">
+				<label asp-for="Input.RoomId" class="form-label"></label>
+				<select asp-for="Input.RoomId" asp-items="Model.Rooms" class="form-select">
+					<option value="">-- Select a room --</option>
+				</select>
+				<span asp-validation-for="Input.RoomId" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="Input.Start" class="form-label"></label>
+				<input asp-for="Input.Start" type="datetime-local" class="form-control" />
+				<span asp-validation-for="Input.Start" class="text-danger"></span>
+			</div>
+
+			<div class="mb-3">
+				<label asp-for="Input.End" class="form-label"></label>
+				<input asp-for="Input.End" type="datetime-local" class="form-control" />
+				<span asp-validation-for="Input.End" class="text-danger"></span>
+			</div>
+
+			<button type="submit" class="btn btn-danger">Block Period</button>
+			<a asp-page="/Lecturer/Index" class="btn btn-secondary ms-2">Cancel</a>
+		</form>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

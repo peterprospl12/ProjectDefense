@@ -1,0 +1,71 @@
+﻿@page
+@model ProjectDefense.Web.Pages.Lecturer.IndexModel
+@{
+    ViewData["Title"] = "Lecturer Dashboard";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<partial name="_StatusMessage" model="Model.StatusMessage" />
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                Manage Your Availability
+            </div>
+            <div class="card-body">
+                <p class="card-text">Define when you are available for student consultations.</p>
+                <a asp-page="./CreateAvailability" class="btn btn-primary">Define New Availability</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                Manage Rooms
+            </div>
+            <div class="card-body">
+                <p class="card-text">Add, edit, or remove consultation rooms.</p>
+                <a asp-page="./Rooms/Index" class="btn btn-secondary">Manage Rooms</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card mb-3">
+            <div class="card-header">
+                Manage Reservations
+            </div>
+            <div class="card-body">
+                <p class="card-text">View and cancel all your reservation slots.</p>
+                <a asp-page="./Reservations/Index" class="btn btn-info">Manage Reservations</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-4">
+        <div class="card mb-3 border-danger">
+            <div class="card-header bg-danger text-white">
+                Block Period
+            </div>
+            <div class="card-body">
+                <p class="card-text">Block a period (e.g., illness). Existing reservations in that period will be cancelled and new bookings prevented.</p>
+                <a asp-page="./Blocks/Create" class="btn btn-outline-danger">Block a Period</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card mb-3 border-dark">
+            <div class="card-header bg-dark text-white">
+                Manage Students
+            </div>
+            <div class="card-body">
+                <p class="card-text">Ban or manage students (prevent login/reservation).</p>
+                <a asp-page="./Students/Ban" class="btn btn-dark">Ban Student</a>
+            </div>
+        </div>
+    </div>
+</div>

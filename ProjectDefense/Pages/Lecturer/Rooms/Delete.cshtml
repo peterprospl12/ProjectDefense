@@ -1,0 +1,27 @@
+﻿@page "{id:int}"
+@model ProjectDefense.Web.Pages.Lecturer.Rooms.DeleteModel
+@{
+	ViewData["Title"] = "Delete Room";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<h3>Are you sure you want to delete this room?</h3>
+<div>
+	<h4>Room</h4>
+	<hr />
+	<dl class="row">
+		<dt class="col-sm-2">
+			@Html.DisplayNameFor(model => model.Room.Name)
+		</dt>
+		<dd class="col-sm-10">
+			@Html.DisplayFor(model => model.Room.Name)
+		</dd>
+	</dl>
+    
+	<form method="post">
+		<input type="hidden" asp-for="Room.Id" />
+		<button type="submit" class="btn btn-danger">Delete</button> |
+		<a asp-page="./Index">Back to List</a>
+	</form>
+</div>
