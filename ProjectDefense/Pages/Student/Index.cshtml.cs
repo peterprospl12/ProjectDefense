@@ -13,7 +13,7 @@ namespace ProjectDefense.Web.Pages.Student
     [Authorize(Roles = "Student")]
     public class IndexModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
-        public IEnumerable<AvailableSlotDto> AvailableSlots { get; set; } = [];
+        public IEnumerable<AvailableReservationDto> AvailableSlots { get; set; } = [];
         public bool HasActiveBooking { get; set; }
         public int ActiveBookingsCount { get; set; }
 

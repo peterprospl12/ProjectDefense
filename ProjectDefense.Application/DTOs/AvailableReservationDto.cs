@@ -1,4 +1,6 @@
-﻿public class AvailableSlotDto
+﻿namespace ProjectDefense.Application.DTOs;
+
+public class AvailableReservationDto
 {
     public int Id { get; set; }
     public DateTime StartTime { get; set; }

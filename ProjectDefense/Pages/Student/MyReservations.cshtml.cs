@@ -14,7 +14,7 @@ namespace ProjectDefense.Web.Pages.Student
     public class MyReservationsModel(IMediator mediator, UserManager<User> userManager) : PageModel
     {
         public IEnumerable<ReservationDto> MyReservations { get; set; } = [];
-        public IEnumerable<AvailableSlotDto> AvailableSlots { get; set; } = [];
+        public IEnumerable<AvailableReservationDto> AvailableSlots { get; set; } = [];
 
         [TempData]
         public string StatusMessage { get; set; }

@@ -16,7 +16,7 @@ public static class SlotsEndpoints
                 return Results.Ok(result);
             })
             .WithName("GetAvailableSlots")
-            .Produces<IEnumerable<AvailableSlotDto>>();
+            .Produces<IEnumerable<AvailableReservationDto>>();
 
         app.MapGet("/api/rooms", async (IMediator mediator) =>
             {

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDefense.Application"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDefense.Infrastructure", "ProjectDefense.Infrastructure\ProjectDefense.Infrastructure.csproj", "{D9FD1378-6BDE-42A4-842C-0656C1BD5112}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDefense.Console", "ProjectDefense.Console\ProjectDefense.Console.csproj", "{05D8077F-D19A-44C3-B5DE-FBB0A4C77815}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectDefense.ConsoleApp", "ProjectDefense.ConsoleApp\ProjectDefense.ConsoleApp.csproj", "{05D8077F-D19A-44C3-B5DE-FBB0A4C77815}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
