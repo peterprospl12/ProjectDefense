@@ -18,7 +18,7 @@ public class ApiClient(HttpClient httpClient)
         }
     }
 
-    public async Task<bool> BookSlotAsync(int slotId, string studentId)
+    public async Task BookSlotAsync(int slotId, string studentId)
     {
         var request = new BookReservationDto() { StudentIndex = studentId };
         try
@@ -28,16 +28,13 @@ public class ApiClient(HttpClient httpClient)
             if (!response.IsSuccessStatusCode)
             {
                 var errorContent = await response.Content.ReadAsStringAsync();
-                Console.WriteLine($"Reservation error: {response.StatusCode}. Response: {errorContent}");
-                return false;
+                var errorMessage = errorContent.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+                throw new InvalidOperationException(errorMessage ?? "Unexpected error occured.");
             }
-            
-            return true;
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine($"HTTP Request error: {e.Message}");
-            return false;
+            throw new InvalidOperationException($"HTTP Request error: {e.Message}", e);
         }
     }
 }

@@ -34,7 +34,14 @@ public class ConsoleApp(ApiClient apiClient)
                     await ShowAvailableSlots();
                     break;
                 case "2":
-                    await BookSlot(studentId);
+                    try
+                    {
+                        await BookSlot(studentId);
+                    }
+                    catch(Exception ex)
+                    {
+                        Console.WriteLine(ex.Message);
+                    }
                     break;
                 case "3":
                     return;
@@ -74,16 +81,19 @@ public class ConsoleApp(ApiClient apiClient)
             return;
         }
 
-        Console.WriteLine($"Attempting to book slot ID: {slotId} for student {studentId}...");
-        var success = await apiClient.BookSlotAsync(slotId, studentId);
-
-        if (success)
+        try
         {
+            Console.WriteLine($"Attempting to book slot ID: {slotId} for student {studentId}...");
+            await apiClient.BookSlotAsync(slotId, studentId);
             Console.WriteLine("Booking was successful!");
         }
-        else
+        catch (InvalidOperationException ex)
         {
-            Console.WriteLine("Failed to book the slot.");
+            Console.WriteLine($"Failed to book the slot: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"An unexpected error occurred: {ex.Message}");
         }
     }
 }
